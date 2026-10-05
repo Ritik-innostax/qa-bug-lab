@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notification settings and FAQ – Acme Outfitters</title>
+  <meta name="description" content="Turn Acme Outfitters text and email alerts on or off, and read answers to common questions.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/">Acme Outfitters</a></header>
+  <main>
+    <h1>Notification settings and FAQ</h1>
+    <p class="lead">Click a switch to turn it on or off. Click a question to show its answer.</p>
+
+    <section class="card" aria-labelledby="settings-heading">
+      <h2 id="settings-heading">Notification settings</h2>
+      <div class="setting">
+        <button type="button" role="switch" id="sms-switch" class="switch" aria-checked="false"
+                data-status="sms-status" data-on-text="Text message alerts are on."
+                data-off-text="Text message alerts are off.">
+          <span class="track" aria-hidden="true"></span><span>Text message alerts</span>
+        </button>
+        <p id="sms-status" aria-live="polite">Text message alerts are off.</p>
+      </div>
+      <div class="setting">
+        <button type="button" role="switch" id="email-switch" class="switch" aria-checked="false"
+                data-status="email-status" data-on-text="Email notifications are on."
+                data-off-text="Email notifications are off.">
+          <span class="track" aria-hidden="true"></span><span>Email notifications</span>
+        </button>
+        <p id="email-status" aria-live="polite">Email notifications are off.</p>
+      </div>
+    </section>
+
+    <section class="card accordion" id="account-faq" aria-labelledby="account-faq-heading">
+      <h2 id="account-faq-heading">Account questions</h2>
+      <h3>
+        <button type="button" class="accordion-trigger" id="account-q-email"
+                aria-expanded="false" aria-controls="account-a-email">How do I change my email address?</button>
+      </h3>
+      <div id="account-a-email" class="accordion-panel" role="region" aria-labelledby="account-q-email" hidden>
+        <p>Open your account page, choose Edit profile and save the new address.</p>
+      </div>
+      <h3>
+        <button type="button" class="accordion-trigger" id="account-q-pause"
+                aria-expanded="false" aria-controls="account-a-pause">Can I pause alerts while travelling?</button>
+      </h3>
+      <div id="account-a-pause" class="accordion-panel" role="region" aria-labelledby="account-q-pause" hidden>
+        <p>Yes. Turn text message alerts off and turn them back on when you return.</p>
+      </div>
+    </section>
+
+    <section class="card accordion" id="shipping-faq" aria-labelledby="shipping-faq-heading">
+      <h2 id="shipping-faq-heading">Shipping questions</h2>
+      <h3>
+        <button type="button" class="accordion-trigger" id="ship-q-time"
+                aria-expanded="false" aria-controls="ship-a-time">How long does shipping take?</button>
+      </h3>
+      <div id="ship-a-time" class="accordion-panel" role="region" aria-labelledby="ship-q-time" hidden>
+        <p>Standard shipping takes 3 to 5 business days within the continental US.</p>
+      </div>
+      <h3>
+        <button type="button" class="accordion-trigger" id="ship-q-cost"
+                aria-expanded="false" aria-controls="ship-a-cost">How much does shipping cost?</button>
+      </h3>
+      <div id="ship-a-cost" class="accordion-panel" role="region" aria-labelledby="ship-q-cost" hidden>
+        <p>Standard shipping is free on orders over $50 and $5.95 otherwise.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><a href="/">Back to all pages</a></footer>
+  <script src="/assets/js/settings.js" defer></script>
+  <script src="/assets/js/email-settings.js" defer></script>
+  <script src="/assets/js/shipping-faq.js" defer></script>
+</body>
+</html>

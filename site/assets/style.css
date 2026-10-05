@@ -1,0 +1,197 @@
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #1c1f23;
+  --muted: #4b5563;
+  --border: #d4d4d8;
+  --accent: #1d4ed8;
+  --accent-text: #ffffff;
+  --success: #166534;
+  --success-bg: #dcfce7;
+  --error: #991b1b;
+  --error-bg: #fee2e2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+a { color: var(--accent); }
+
+.site-header,
+.site-footer {
+  padding: 14px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
+  margin-top: 48px;
+}
+
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text);
+}
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 { font-size: 1.75rem; margin: 0 0 8px; }
+h2 { font-size: 1.25rem; margin: 28px 0 8px; }
+
+.lead { color: var(--muted); margin-top: 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.page-list { padding-left: 20px; }
+.page-list li { margin: 6px 0; }
+
+.menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+label { display: block; font-weight: 600; margin: 12px 0 4px; }
+
+input,
+textarea {
+  width: 100%;
+  max-width: 420px;
+  padding: 8px 10px;
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+input[type="number"] { max-width: 120px; }
+
+textarea { min-height: 96px; }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 8px 14px;
+}
+
+button.secondary {
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.form-actions { margin-top: 16px; }
+
+.form-message { margin: 12px 0 0; min-height: 1.5em; }
+.form-message.success { color: var(--success); background: var(--success-bg); padding: 8px 10px; border-radius: 6px; }
+.form-message.error { color: var(--error); background: var(--error-bg); padding: 8px 10px; border-radius: 6px; }
+
+.item-list { list-style: none; padding: 0; margin: 0; }
+.item-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Switch: a <button role="switch">; the visual state follows aria-checked. */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.switch .track {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: #9ca3af;
+  position: relative;
+  flex: none;
+}
+.switch .track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+.switch[aria-checked="true"] .track { background: var(--success); }
+.switch[aria-checked="true"] .track::after { left: 21px; }
+
+.accordion h3 { margin: 0; font-size: 1rem; }
+.accordion-trigger {
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+.accordion-trigger[aria-expanded="true"] { border-color: var(--accent); }
+.accordion-panel { padding: 8px 12px; border: 1px solid var(--border); border-top: 0; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+td.num, th.num { text-align: right; }
+tfoot th, tfoot td { font-weight: 700; }
+
+.summary dt { font-weight: 600; }
+.summary dd { margin: 0 0 8px; font-size: 1.125rem; }
+
+.rule { color: var(--muted); font-size: 0.95rem; }
+
+.hint { color: var(--muted); font-size: 0.95rem; margin: 8px 0 0; }
+
+.counter { font-weight: 600; font-size: 1.125rem; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.product { border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.product h3 { margin: 0 0 4px; font-size: 1rem; }
+
+.setting + .setting { margin-top: 12px; }
+.setting p { margin: 6px 0 0; }
+
+@media (max-width: 520px) {
+  .item-list li { flex-direction: column; align-items: flex-start; }
+}

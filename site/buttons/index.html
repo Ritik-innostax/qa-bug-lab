@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wishlist and cart – Acme Outfitters</title>
+  <meta name="description" content="Save Acme Outfitters products to your wishlist and manage your cart and saved-for-later list.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/">Acme Outfitters</a></header>
+  <main>
+    <h1>Wishlist and cart</h1>
+    <p class="lead">Save products for later and tidy up your cart.</p>
+
+    <section class="card" aria-labelledby="wishlist-heading">
+      <h2 id="wishlist-heading">Wishlist</h2>
+      <p class="counter">Saved to wishlist: <output id="wishlist-count" aria-live="polite">0</output></p>
+      <p class="hint">Each “Add … to wishlist” click adds 1 to the number above.</p>
+      <div class="product-grid">
+        <article class="product" aria-labelledby="product-jacket">
+          <h3 id="product-jacket">Summit Jacket – $129.00</h3>
+          <p>Waterproof shell with taped seams.</p>
+          <button type="button" id="wishlist-add-jacket" data-sku="JKT-01">Add Summit Jacket to wishlist</button>
+        </article>
+        <article class="product" aria-labelledby="product-bottle">
+          <h3 id="product-bottle">Trail Bottle – $18.00</h3>
+          <p>Insulated steel bottle, keeps drinks cold for 24 hours.</p>
+          <button type="button" id="wishlist-add-bottle" data-sku="BTL-2">Add Trail Bottle to wishlist</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="cart-heading">
+      <h2 id="cart-heading">Cart</h2>
+      <p class="counter">Items in cart: <output id="cart-count" aria-live="polite">3</output></p>
+      <p class="hint">“Remove &lt;item&gt;” removes that item from the list below.</p>
+      <ul id="cart-list" class="item-list"></ul>
+      <p id="cart-empty" hidden>Your cart is empty.</p>
+    </section>
+
+    <section class="card" aria-labelledby="later-heading">
+      <h2 id="later-heading">Saved for later</h2>
+      <p class="counter">Items saved for later: <output id="later-count" aria-live="polite">3</output></p>
+      <ul id="later-list" class="item-list"></ul>
+      <p id="later-empty" hidden>Nothing saved for later.</p>
+    </section>
+  </main>
+  <footer class="site-footer"><a href="/">Back to all pages</a></footer>
+  <script src="/assets/js/wishlist.js" defer></script>
+  <script src="/assets/js/cart.js" defer></script>
+  <script src="/assets/js/saved-for-later.js" defer></script>
+</body>
+</html>

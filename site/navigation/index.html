@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Store menu and help topics – Acme Outfitters</title>
+  <meta name="description" content="Acme Outfitters store menu (pricing, careers) and help topics (returns, shipping policy).">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/">Acme Outfitters</a></header>
+  <main>
+    <h1>Store menu and help topics</h1>
+    <p class="lead">Each link opens the page it names.</p>
+
+    <section class="card" aria-labelledby="store-menu-heading">
+      <h2 id="store-menu-heading">Store menu</h2>
+      <nav class="menu" aria-label="Store menu" data-router>
+        <ul>
+          <li><a href="/pricing/" data-route="pricing">Pricing</a> – membership plans and yearly prices.</li>
+          <li><a href="/careers/" data-route="careers">Careers</a> – open jobs at Acme Outfitters.</li>
+        </ul>
+      </nav>
+    </section>
+
+    <section class="card" aria-labelledby="help-heading">
+      <h2 id="help-heading">Help topics</h2>
+      <nav class="menu" aria-label="Help topics">
+        <ul>
+          <li><a href="/returns/">Returns</a> – how to send an item back.</li>
+          <li><a href="/shipping-policy/">Shipping policy</a> – delivery times and costs.</li>
+        </ul>
+      </nav>
+    </section>
+  </main>
+  <footer class="site-footer"><a href="/">Back to all pages</a></footer>
+  <script src="/assets/js/store-router.js" defer></script>
+</body>
+</html>

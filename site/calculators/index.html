@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order calculators – Acme Outfitters</title>
+  <meta name="description" content="Acme Outfitters checkout totals, bulk order totals and a sales tax calculator.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/">Acme Outfitters</a></header>
+  <main>
+    <h1>Order calculators</h1>
+    <p class="lead">Totals update as soon as you change a quantity, price or rate. The formula under each calculator shows how it is worked out.</p>
+
+    <section class="card" aria-labelledby="checkout-heading">
+      <h2 id="checkout-heading">Checkout</h2>
+      <table id="checkout-table">
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col" class="num">Unit price</th><th scope="col" class="num">Quantity</th><th scope="col" class="num">Line total</th></tr>
+        </thead>
+        <tbody>
+          <tr data-unit-cents="400">
+            <th scope="row">Notebook</th>
+            <td class="num">$4.00</td>
+            <td class="num"><input id="checkout-qty-notebook" type="number" min="0" step="1" value="2" aria-label="Notebook quantity"></td>
+            <td class="num"><output for="checkout-qty-notebook" id="checkout-line-notebook">$8.00</output></td>
+          </tr>
+          <tr data-unit-cents="150">
+            <th scope="row">Pen</th>
+            <td class="num">$1.50</td>
+            <td class="num"><input id="checkout-qty-pen" type="number" min="0" step="1" value="3" aria-label="Pen quantity"></td>
+            <td class="num"><output for="checkout-qty-pen" id="checkout-line-pen">$4.50</output></td>
+          </tr>
+          <tr data-unit-cents="2500">
+            <th scope="row">Backpack</th>
+            <td class="num">$25.00</td>
+            <td class="num"><input id="checkout-qty-backpack" type="number" min="0" step="1" value="1" aria-label="Backpack quantity"></td>
+            <td class="num"><output for="checkout-qty-backpack" id="checkout-line-backpack">$25.00</output></td>
+          </tr>
+        </tbody>
+      </table>
+      <dl class="summary">
+        <dt>Subtotal</dt><dd><output id="checkout-subtotal" aria-live="polite">$37.50</output></dd>
+        <dt>Sales tax (8.25%)</dt><dd><output id="checkout-tax" aria-live="polite">$3.09</output></dd>
+        <dt>Total</dt><dd><output id="checkout-total" aria-live="polite">$40.59</output></dd>
+      </dl>
+      <p class="rule">Line total = unit price × quantity. Subtotal = sum of line totals. Sales tax = subtotal × 8.25%, rounded to the nearest cent. Total = subtotal + sales tax.</p>
+    </section>
+
+    <section class="card" aria-labelledby="bulk-heading">
+      <h2 id="bulk-heading">Bulk order</h2>
+      <table id="bulk-table">
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col" class="num">Unit price</th><th scope="col" class="num">Quantity</th><th scope="col" class="num">Line total</th></tr>
+        </thead>
+        <tbody>
+          <tr data-unit-cents="1200">
+            <th scope="row">Water bottle</th>
+            <td class="num">$12.00</td>
+            <td class="num"><input id="bulk-qty-bottle" type="number" min="0" step="1" value="2" aria-label="Water bottle quantity"></td>
+            <td class="num"><output for="bulk-qty-bottle" id="bulk-line-bottle">$24.00</output></td>
+          </tr>
+          <tr data-unit-cents="350">
+            <th scope="row">Trail mix</th>
+            <td class="num">$3.50</td>
+            <td class="num"><input id="bulk-qty-mix" type="number" min="0" step="1" value="4" aria-label="Trail mix quantity"></td>
+            <td class="num"><output for="bulk-qty-mix" id="bulk-line-mix">$14.00</output></td>
+          </tr>
+          <tr data-unit-cents="2000">
+            <th scope="row">Headlamp</th>
+            <td class="num">$20.00</td>
+            <td class="num"><input id="bulk-qty-headlamp" type="number" min="0" step="1" value="1" aria-label="Headlamp quantity"></td>
+            <td class="num"><output for="bulk-qty-headlamp" id="bulk-line-headlamp">$20.00</output></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr><th scope="row" colspan="3">Order total</th><td class="num"><output id="bulk-total" aria-live="polite">$35.50</output></td></tr>
+        </tfoot>
+      </table>
+      <p class="rule">Line total = unit price × quantity. Order total = sum of line totals.</p>
+    </section>
+
+    <section class="card" aria-labelledby="tax-heading">
+      <h2 id="tax-heading">Sales tax calculator</h2>
+      <label for="tax-price">Price ($)</label>
+      <input id="tax-price" type="number" min="0" step="0.01" value="200.00">
+      <label for="tax-rate">Tax rate (%)</label>
+      <input id="tax-rate" type="number" min="0" step="0.01" value="8.25">
+      <dl class="summary">
+        <dt>Sales tax</dt><dd><output id="tax-amount" for="tax-price tax-rate" aria-live="polite">$16.00</output></dd>
+        <dt>Price with tax</dt><dd><output id="tax-total" for="tax-price tax-rate" aria-live="polite">$216.00</output></dd>
+      </dl>
+      <p class="rule">Sales tax = price × tax rate ÷ 100, rounded to the nearest cent. Price with tax = price + sales tax.</p>
+    </section>
+  </main>
+  <footer class="site-footer"><a href="/">Back to all pages</a></footer>
+  <script src="/assets/js/money.js" defer></script>
+  <script src="/assets/js/checkout.js" defer></script>
+  <script src="/assets/js/bulk-order.js" defer></script>
+  <script src="/assets/js/sales-tax.js" defer></script>
+</body>
+</html>

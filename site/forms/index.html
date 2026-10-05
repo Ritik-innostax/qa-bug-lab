@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact and newsletter – Acme Outfitters</title>
+  <meta name="description" content="Contact Acme Outfitters support, subscribe to the newsletter or request a back-in-stock alert.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/">Acme Outfitters</a></header>
+  <main>
+    <h1>Contact and newsletter</h1>
+    <p class="lead">Every form confirms on this page when it is sent, or tells you what to fix.</p>
+
+    <section class="card" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact support</h2>
+      <form id="contact-form" novalidate>
+        <label for="contact-name">Name</label>
+        <input id="contact-name" name="name" type="text" autocomplete="name">
+        <label for="contact-email">Email address</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message"></textarea>
+        <div class="form-actions"><button type="submit">Send message</button></div>
+        <p class="hint">Once your message is sent you will see “Thanks, &lt;your name&gt;. Your message has been sent.” below and the form clears.</p>
+        <p id="contact-result" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="newsletter-heading">
+      <h2 id="newsletter-heading">Newsletter</h2>
+      <form id="newsletter-form" novalidate>
+        <label for="newsletter-email">Email for newsletter</label>
+        <input id="newsletter-email" name="email" type="email" autocomplete="email">
+        <div class="form-actions"><button type="submit">Subscribe</button></div>
+        <p class="hint">Use a full address such as name@example.com. An incomplete address shows “Please enter a valid email address.”</p>
+        <p id="newsletter-result" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="stock-heading">
+      <h2 id="stock-heading">Back-in-stock alert: Summit Tent</h2>
+      <form id="stock-form" novalidate>
+        <label for="stock-email">Email for stock alert</label>
+        <input id="stock-email" name="email" type="email" autocomplete="email">
+        <div class="form-actions"><button type="submit">Notify me</button></div>
+        <p class="hint">Use a full address such as name@example.com. An incomplete address shows “Please enter a valid email address.”</p>
+        <p id="stock-result" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer"><a href="/">Back to all pages</a></footer>
+  <script src="/assets/js/api.js" defer></script>
+  <script src="/assets/js/contact.js" defer></script>
+  <script src="/assets/js/newsletter.js" defer></script>
+  <script src="/assets/js/stock-alert.js" defer></script>
+</body>
+</html>
