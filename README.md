@@ -1,6 +1,6 @@
 # QA Scanner Functional Bug Lab
 
-A small, deterministic local website with **10 real functional bugs** and **healthy
+A small, deterministic local website with **14 real functional bugs** and **healthy
 counterparts**, used as a known-answer target for QA Scanner (issue #626). It answers one
 question: *when a site has a real navigation, form, click, toggle or calculation bug, does the
 scanner find it and flag it as a bug?*
@@ -75,7 +75,7 @@ a VM), not on a static host such as GitHub Pages. Start command: `python3 server
 | `/` | links to the 5 feature pages |
 | `/navigation/` | NAV-001, NAV-002, healthy links Careers and Returns |
 | `/forms/` | FORM-001, FORM-002, healthy back-in-stock form |
-| `/buttons/` | CLICK-001, CLICK-002, healthy wishlist button and saved-for-later list |
+| `/buttons/` | CLICK-001, CLICK-002, CART-001 to CART-004, healthy wishlist button, healthy basket product and saved-for-later list |
 | `/toggles/` | TOGGLE-001, TOGGLE-002, healthy switch and accordion |
 | `/calculators/` | CALC-001, CALC-002, healthy checkout calculator |
 | `/pricing/`, `/careers/`, `/returns/` | destination pages |
@@ -91,6 +91,10 @@ a VM), not on a static host such as GitHub Pages. Start command: `python3 server
 | FORM-002 | `/forms/` | "not-an-email" in "Email for newsletter", click "Subscribe" | "Please enter a valid email address." | "You're subscribed. ..." (server said 400) |
 | CLICK-001 | `/buttons/` | Click "Add Trail Bottle to wishlist" | Saved to wishlist 0 → 1 | Stays 0 |
 | CLICK-002 | `/buttons/` | Click "Remove Blue Mug" | Blue Mug removed | Red Pen removed |
+| CART-001 | `/buttons/` | Click 'Add Trail Stove to basket' once | 'Items in basket' 0 → 1 | Shows 2 (one row, $45.00) |
+| CART-002 | `/buttons/` | Click 'Add Rain Poncho to basket' | 'Rain Poncho $22.00' row | 'Camp Stool $19.00' row |
+| CART-003 | `/buttons/` | Click 'Add Head Lamp to basket' once | One row, count 1, total $20.00 | Two rows, count 2, total $40.00 |
+| CART-004 | `/buttons/` | Add Camp Mug twice, click 'Empty basket' | Count 0 | List empty, total $0.00, count still 2 |
 | TOGGLE-001 | `/toggles/` | Click "Email notifications" switch | OFF → ON, "are on." | Stays OFF |
 | TOGGLE-002 | `/toggles/` | Click "How long does shipping take?" | Answer shown | Stays collapsed |
 | CALC-001 | `/calculators/` | Read Bulk order total | $24.00 + $14.00 + $20.00 = **$58.00** | **$35.50** |

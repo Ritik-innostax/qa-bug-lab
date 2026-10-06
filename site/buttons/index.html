@@ -40,6 +40,38 @@
       <p id="cart-empty" hidden>Your cart is empty.</p>
     </section>
 
+    <section class="card" aria-labelledby="basket-heading">
+      <h2 id="basket-heading">Shop basket</h2>
+      <p class="counter">Items in basket: <output id="basket-count" aria-live="polite">0</output></p>
+      <p class="counter">Basket total: <output id="basket-total" aria-live="polite">$0.00</output></p>
+      <p class="hint">Each “Add … to basket” click adds one item at its listed price. “Empty basket” removes everything.</p>
+      <div class="product-grid">
+        <article class="product" aria-labelledby="shop-mug">
+          <h3 id="shop-mug">Camp Mug – $12.00</h3>
+          <p>Enamel mug, 350 ml.</p>
+          <button type="button" id="basket-add-mug" data-product="MUG-01">Add Camp Mug to basket</button>
+        </article>
+        <article class="product" aria-labelledby="shop-stove">
+          <h3 id="shop-stove">Trail Stove – $45.00</h3>
+          <p>Folding single-burner stove.</p>
+          <button type="button" id="basket-add-stove" data-product="STV-01">Add Trail Stove to basket</button>
+        </article>
+        <article class="product" aria-labelledby="shop-poncho">
+          <h3 id="shop-poncho">Rain Poncho – $22.00</h3>
+          <p>Packs into its own pocket.</p>
+          <button type="button" id="basket-add-poncho" data-product="PNC-01">Add Rain Poncho to basket</button>
+        </article>
+        <article class="product" aria-labelledby="shop-lamp">
+          <h3 id="shop-lamp">Head Lamp – $20.00</h3>
+          <p>300-lumen rechargeable lamp.</p>
+          <button type="button" id="basket-add-lamp" data-product="LMP-01">Add Head Lamp to basket</button>
+        </article>
+      </div>
+      <ul id="basket-list" class="item-list"></ul>
+      <p id="basket-empty">Your basket is empty.</p>
+      <button type="button" id="basket-clear" class="secondary">Empty basket</button>
+    </section>
+
     <section class="card" aria-labelledby="later-heading">
       <h2 id="later-heading">Saved for later</h2>
       <p class="counter">Items saved for later: <output id="later-count" aria-live="polite">3</output></p>
@@ -51,5 +83,6 @@
   <script src="/assets/js/wishlist.js" defer></script>
   <script src="/assets/js/cart.js" defer></script>
   <script src="/assets/js/saved-for-later.js" defer></script>
+  <script src="/assets/js/basket.js" defer></script>
 </body>
 </html>

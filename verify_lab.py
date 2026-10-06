@@ -72,6 +72,9 @@ class Lab:
     def list_items(self, list_id: str) -> list[str]:
         return [t.strip() for t in self.page.locator(f"#{list_id} li span").all_inner_texts()]
 
+    def basket_rows(self) -> list[str]:
+        return [" ".join(t.split()) for t in self.page.locator("#basket-list li").all_inner_texts()]
+
     def table_expectation(self, table_id: str) -> tuple[list[str], Decimal]:
         """Expected line totals and their sum, computed from the visible prices and quantities."""
         lines, total = [], Decimal("0")
@@ -165,6 +168,46 @@ def click_002(lab: Lab) -> str:
     lab.page.wait_for_timeout(QUIET_MS)
     check(lab.list_items("cart-list") == ["Blue Mug", "Green Notebook"], "removing the last item removed something")
     return "click 'Remove Blue Mug' -> Red Pen removed, Blue Mug still in cart; last item can't be removed"
+
+
+def cart_001(lab: Lab) -> str:
+    lab.open("/buttons/")
+    lab.page.get_by_role("button", name="Add Trail Stove to basket").click()
+    expect(lab.page.locator("#basket-total")).to_have_text("$45.00")
+    check(lab.basket_rows() == ["Trail Stove $45.00"], f"basket rows {lab.basket_rows()}")
+    check(lab.text("#basket-count") == "2", f"basket count became {lab.text('#basket-count')}")
+    return "click 'Add Trail Stove to basket' once -> one row, $45.00, but 'Items in basket' shows 2 (expected 1)"
+
+
+def cart_002(lab: Lab) -> str:
+    lab.open("/buttons/")
+    lab.page.get_by_role("button", name="Add Rain Poncho to basket").click()
+    expect(lab.page.locator("#basket-count")).to_have_text("1")
+    check(lab.basket_rows() == ["Camp Stool $19.00"], f"basket rows {lab.basket_rows()}")
+    check(lab.text("#basket-total") == "$19.00", f"basket total {lab.text('#basket-total')}")
+    return "click 'Add Rain Poncho to basket' -> basket gets 'Camp Stool $19.00' (expected Rain Poncho $22.00)"
+
+
+def cart_003(lab: Lab) -> str:
+    lab.open("/buttons/")
+    lab.page.get_by_role("button", name="Add Head Lamp to basket").click()
+    expect(lab.page.locator("#basket-count")).to_have_text("2")
+    check(lab.basket_rows() == ["Head Lamp $20.00", "Head Lamp $20.00"], f"basket rows {lab.basket_rows()}")
+    check(lab.text("#basket-total") == "$40.00", f"basket total {lab.text('#basket-total')}")
+    return "click 'Add Head Lamp to basket' once -> two Head Lamp rows, count 2, total $40.00 (expected 1 row, 1, $20.00)"
+
+
+def cart_004(lab: Lab) -> str:
+    lab.open("/buttons/")
+    mug = lab.page.get_by_role("button", name="Add Camp Mug to basket")
+    mug.click()
+    mug.click()
+    expect(lab.page.locator("#basket-count")).to_have_text("2")
+    lab.page.get_by_role("button", name="Empty basket").click()
+    expect(lab.page.locator("#basket-total")).to_have_text("$0.00")
+    check(lab.basket_rows() == [], "basket rows remain")
+    check(lab.text("#basket-count") == "2", f"basket count became {lab.text('#basket-count')}")
+    return "'Empty basket' -> list empty and total $0.00, but 'Items in basket' still shows 2 (expected 0)"
 
 
 def toggle_001(lab: Lab) -> str:
@@ -263,6 +306,19 @@ def healthy_button(lab: Lab) -> str:
     return "'Add Summit Jacket' -> 1, 2; saved-for-later 'Remove X' removes exactly X"
 
 
+def healthy_basket(lab: Lab) -> str:
+    lab.open("/buttons/")
+    mug = lab.page.get_by_role("button", name="Add Camp Mug to basket")
+    mug.click()
+    expect(lab.page.locator("#basket-count")).to_have_text("1")
+    expect(lab.page.locator("#basket-total")).to_have_text("$12.00")
+    mug.click()
+    expect(lab.page.locator("#basket-count")).to_have_text("2")
+    expect(lab.page.locator("#basket-total")).to_have_text("$24.00")
+    check(lab.basket_rows() == ["Camp Mug $12.00", "Camp Mug $12.00"], f"rows {lab.basket_rows()}")
+    return "'Add Camp Mug to basket' -> count 1, 2; two rows; total $12.00, $24.00"
+
+
 def healthy_toggle(lab: Lab) -> str:
     lab.open("/toggles/")
     switch = lab.page.get_by_role("switch", name="Text message alerts")
@@ -303,10 +359,12 @@ CHECKS: list[tuple[str, str, Callable[[Lab], str]]] = [
     ("bug", "NAV-001", nav_001), ("bug", "NAV-002", nav_002),
     ("bug", "FORM-001", form_001), ("bug", "FORM-002", form_002),
     ("bug", "CLICK-001", click_001), ("bug", "CLICK-002", click_002),
+    ("bug", "CART-001", cart_001), ("bug", "CART-002", cart_002),
+    ("bug", "CART-003", cart_003), ("bug", "CART-004", cart_004),
     ("bug", "TOGGLE-001", toggle_001), ("bug", "TOGGLE-002", toggle_002),
     ("bug", "CALC-001", calc_001), ("bug", "CALC-002", calc_002),
     ("healthy", "HEALTHY-NAV", healthy_nav), ("healthy", "HEALTHY-FORM", healthy_form),
-    ("healthy", "HEALTHY-BUTTON", healthy_button), ("healthy", "HEALTHY-TOGGLE", healthy_toggle),
+    ("healthy", "HEALTHY-BUTTON", healthy_button), ("healthy", "HEALTHY-BASKET", healthy_basket), ("healthy", "HEALTHY-TOGGLE", healthy_toggle),
     ("healthy", "HEALTHY-CALC", healthy_calc),
 ]
 
