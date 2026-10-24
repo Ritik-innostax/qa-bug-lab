@@ -1,6 +1,6 @@
 # QA Scanner Functional Bug Lab
 
-A small, deterministic local website with **14 real functional bugs** and **healthy
+A small, deterministic local website with **20 real functional bugs** and **healthy
 counterparts**, used as a known-answer target for QA Scanner (issue #626). It answers one
 question: *when a site has a real navigation, form, click, toggle or calculation bug, does the
 scanner find it and flag it as a bug?*
@@ -77,7 +77,7 @@ a VM), not on a static host such as GitHub Pages. Start command: `python3 server
 | `/forms/` | FORM-001, FORM-002, healthy back-in-stock form |
 | `/buttons/` | CLICK-001, CLICK-002, CART-001 to CART-004, healthy wishlist button, healthy basket product and saved-for-later list |
 | `/toggles/` | TOGGLE-001, TOGGLE-002, healthy switch and accordion |
-| `/calculators/` | CALC-001, CALC-002, healthy checkout calculator |
+| `/calculators/` | CALC-001 to CALC-008, healthy checkout calculator, healthy shipping, cart review and invoice |
 | `/pricing/`, `/careers/`, `/returns/` | destination pages |
 | `/shipping-policy/` | intentionally missing (HTTP 404), target of NAV-002 |
 
@@ -99,6 +99,12 @@ a VM), not on a static host such as GitHub Pages. Start command: `python3 server
 | TOGGLE-002 | `/toggles/` | Click "How long does shipping take?" | Answer shown | Stays collapsed |
 | CALC-001 | `/calculators/` | Read Bulk order total | $24.00 + $14.00 + $20.00 = **$58.00** | **$35.50** |
 | CALC-002 | `/calculators/` | Read Sales tax (200.00 at 8.25%) | **$16.50** / $216.50 | **$16.00** / $216.00 |
+| CALC-003 | `/calculators/` | Apply SAVE10 to the default checkout | Tax **$2.78**, total **$36.53** | Tax $3.09 (before discount), total $36.84 |
+| CALC-004 | `/calculators/` | Order subtotal 50.00 | Shipping **$0.00** (free from $50.00) | $5.00 |
+| CALC-005 | `/calculators/` | Gift box quantity 2 → 5 | Total **$34.00** | Total stays $16.00 |
+| CALC-006 | `/calculators/` | Remove Pen from the cart review ($24.50) | Total **$20.00** | $23.00 |
+| CALC-007 | `/calculators/` | Payment received 100.00 on INV-204 | Amount due **$362.00** | $462.00 |
+| CALC-008 | `/calculators/` | Small order 0.10 at 5% | Tax **$0.01** (half cent rounds up) | $0.00 |
 
 Steps, root causes, severities and healthy counterparts are in `expected_bugs.json`.
 
@@ -111,6 +117,7 @@ Steps, root causes, severities and healthy counterparts are in `expected_bugs.js
 | `/buttons/` | "Add Summit Jacket to wishlist", Saved for later "Remove …" | count +1; removes exactly that item |
 | `/toggles/` | "Text message alerts", Account questions | flips OFF/ON; opens and closes |
 | `/calculators/` | Checkout | $37.50 / $3.09 / $40.59 |
+| `/calculators/` | Shipping 49.99 / 60.00, cart review (remove Mug), invoice with no payment | $5.00 / free; $12.50; $462.00 due |
 
 ## Verify the lab
 

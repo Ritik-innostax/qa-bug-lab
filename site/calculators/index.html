@@ -94,11 +94,120 @@
       </dl>
       <p class="rule">Sales tax = price × tax rate ÷ 100, rounded to the nearest cent. Price with tax = price + sales tax.</p>
     </section>
+
+    <section class="card" aria-labelledby="promo-heading">
+      <h2 id="promo-heading">Discount code</h2>
+      <label for="promo-code">Promo code</label>
+      <input id="promo-code" type="text" autocomplete="off" placeholder="e.g. SAVE10">
+      <button type="button" id="promo-apply">Apply code</button>
+      <dl class="summary">
+        <dt>Subtotal</dt><dd><output id="promo-subtotal">$37.50</output></dd>
+        <dt>Discount</dt><dd><output id="promo-discount" aria-live="polite">$0.00</output></dd>
+        <dt>Sales tax (8.25%)</dt><dd><output id="promo-tax" aria-live="polite">$3.09</output></dd>
+        <dt>Total</dt><dd><output id="promo-total" aria-live="polite">$40.59</output></dd>
+      </dl>
+      <p class="rule">SAVE10 takes 10% off the subtotal. Discount = subtotal × 10%, rounded to the nearest cent. Sales tax = (subtotal − discount) × 8.25%, rounded to the nearest cent. Total = subtotal − discount + sales tax.</p>
+    </section>
+
+    <section class="card" aria-labelledby="shipping-heading">
+      <h2 id="shipping-heading">Shipping</h2>
+      <label for="ship-subtotal">Order subtotal ($)</label>
+      <input id="ship-subtotal" type="number" min="0" step="0.01" value="45.00">
+      <dl class="summary">
+        <dt>Shipping</dt><dd><output id="ship-fee" aria-live="polite">$5.00</output></dd>
+      </dl>
+      <p class="rule">Shipping is $5.00. Orders of $50.00 or more (before tax) ship free.</p>
+    </section>
+
+    <section class="card" aria-labelledby="gift-heading">
+      <h2 id="gift-heading">Gift wrap</h2>
+      <table>
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col" class="num">Unit price</th><th scope="col" class="num">Quantity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Gift box</th>
+            <td class="num">$6.00</td>
+            <td class="num"><input id="gift-qty" type="number" min="0" step="1" value="2" aria-label="Gift box quantity"></td>
+          </tr>
+        </tbody>
+      </table>
+      <dl class="summary">
+        <dt>Gift boxes</dt><dd><output id="gift-line" aria-live="polite">$12.00</output></dd>
+        <dt>Total (with $4.00 gift wrap)</dt><dd><output id="gift-total" aria-live="polite">$16.00</output></dd>
+      </dl>
+      <p class="rule">Gift boxes = $6.00 × quantity. Total = gift boxes + $4.00 gift wrap fee.</p>
+    </section>
+
+    <section class="card" aria-labelledby="review-heading">
+      <h2 id="review-heading">Cart review</h2>
+      <table id="review-table">
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col" class="num">Quantity</th><th scope="col" class="num">Line total</th><th scope="col">Remove</th></tr>
+        </thead>
+        <tbody>
+          <tr data-unit-cents="400" data-line-cents="800">
+            <th scope="row">Notebook</th>
+            <td class="num">2</td>
+            <td class="num">$8.00</td>
+            <td><button type="button" data-remove aria-label="Remove Notebook from cart">Remove</button></td>
+          </tr>
+          <tr data-unit-cents="150" data-line-cents="450">
+            <th scope="row">Pen</th>
+            <td class="num">3</td>
+            <td class="num">$4.50</td>
+            <td><button type="button" data-remove aria-label="Remove Pen from cart">Remove</button></td>
+          </tr>
+          <tr data-unit-cents="1200" data-line-cents="1200">
+            <th scope="row">Mug</th>
+            <td class="num">1</td>
+            <td class="num">$12.00</td>
+            <td><button type="button" data-remove aria-label="Remove Mug from cart">Remove</button></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr><th scope="row" colspan="2">Cart total</th><td class="num"><output id="review-total" aria-live="polite">$24.50</output></td><td></td></tr>
+        </tfoot>
+      </table>
+      <p class="rule">Line total = unit price × quantity. Cart total = sum of line totals. Removing an item takes its line total off the cart total.</p>
+    </section>
+
+    <section class="card" aria-labelledby="invoice-heading">
+      <h2 id="invoice-heading">Invoice INV-204</h2>
+      <dl class="summary">
+        <dt>Subtotal (services + parts)</dt><dd><output id="invoice-subtotal">$420.00</output></dd>
+        <dt>Tax (10% of subtotal)</dt><dd><output id="invoice-tax" aria-live="polite">$42.00</output></dd>
+        <dt>Total (subtotal + tax)</dt><dd><output id="invoice-total" aria-live="polite">$462.00</output></dd>
+        <dt>Amount due (total − payment)</dt><dd><output id="invoice-due" aria-live="polite">$362.00</output></dd>
+      </dl>
+      <label for="invoice-payment">Payment received ($)</label>
+      <input id="invoice-payment" type="number" min="0" step="0.01" value="100.00">
+      <p class="rule">In plain words: tax is 10% of the subtotal. Total = subtotal + tax. Amount due = total minus the payment received. Example: $462.00 total − $100.00 paid = $362.00 due.</p>
+    </section>
+
+    <section class="card" aria-labelledby="small-tax-heading">
+      <h2 id="small-tax-heading">Small order tax</h2>
+      <label for="small-amount">Small order amount ($)</label>
+      <input id="small-amount" type="number" min="0" step="0.01" value="0.10">
+      <label for="small-rate">Small order rate (%)</label>
+      <input id="small-rate" type="number" min="0" step="0.01" value="5">
+      <dl class="summary">
+        <dt>Sales tax</dt><dd><output id="small-tax" aria-live="polite">$0.01</output></dd>
+      </dl>
+      <p class="rule">Sales tax = amount × rate ÷ 100, rounded half up to the nearest cent (half a cent rounds up).</p>
+    </section>
   </main>
   <footer class="site-footer"><a href="/">Back to all pages</a></footer>
   <script src="/assets/js/money.js" defer></script>
   <script src="/assets/js/checkout.js" defer></script>
   <script src="/assets/js/bulk-order.js" defer></script>
   <script src="/assets/js/sales-tax.js" defer></script>
+  <script src="/assets/js/promo-code.js" defer></script>
+  <script src="/assets/js/shipping-threshold.js" defer></script>
+  <script src="/assets/js/gift-wrap.js" defer></script>
+  <script src="/assets/js/cart-review.js" defer></script>
+  <script src="/assets/js/invoice-due.js" defer></script>
+  <script src="/assets/js/small-order-tax.js" defer></script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 {
   "lab": "qa-scanner-functional-bug-lab",
   "issue": "#626",
-  "version": 3,
+  "version": 4,
   "default_base_url": "http://127.0.0.1:8765",
   "page_budget": 10,
-  "notes": "Ground truth for scoring QA Scanner output. Never served (lives outside site/). v2 puts each category's two bugs and its healthy control on one page, so the whole site is 10 routes and fits QA Scanner's default MAX_PAGES=10 crawl. Two bugs share each feature route, so match scanner output on route + control (accessible name), not route alone. Every expected result is stated or computable from what the page shows; none is derived from the broken implementation. v3 adds four basket bugs (CART-001 to CART-004) and a healthy basket product to the existing /buttons/ page, so the site stays at 10 routes.",
+  "notes": "Ground truth for scoring QA Scanner output. Never served (lives outside site/). v2 puts each category's two bugs and its healthy control on one page, so the whole site is 10 routes and fits QA Scanner's default MAX_PAGES=10 crawl. Two bugs share each feature route, so match scanner output on route + control (accessible name), not route alone. Every expected result is stated or computable from what the page shows; none is derived from the broken implementation. v3 adds four basket bugs (CART-001 to CART-004) and a healthy basket product to the existing /buttons/ page, so the site stays at 10 routes. v4 adds six calculation bugs (CALC-003 to CALC-008: promo discount and tax base, free-shipping boundary, gift-wrap total after a quantity change, remove-item total, invoice amount due, half-cent tax rounding) and three healthy calculation controls, all on the existing /calculators/ page, so it stays at 10 routes.",
   "scoring": {
     "detected": "A bug/finding on the bug's route whose title, steps or evidence identify the bug's control and the wrong behavior.",
     "misclassified": "The bug's control has a failing test, but it ended as test_bug/locator/timing/unknown, or as a finding that was never promoted to a bug.",
@@ -277,6 +277,181 @@
       "healthy_counterpart": "Checkout calculator (8.25% tax computed correctly)"
     },
     {
+      "id": "CALC-003",
+      "category": "calculation",
+      "type": "tax_before_discount",
+      "route": "/calculators/",
+      "section": "Discount code",
+      "control": {
+        "role": "status",
+        "name": "Total",
+        "selector": "#promo-total"
+      },
+      "inputs": {
+        "subtotal": "37.50",
+        "promo_code": "SAVE10",
+        "tax_rate_percent": "8.25"
+      },
+      "user_action": "Type SAVE10 in 'Promo code' and click 'Apply code'",
+      "expected_visible_result": "Discount $3.75; Sales tax (37.50 - 3.75) x 8.25% = $2.78; Total $36.53 (rule on page: tax on subtotal minus discount).",
+      "actual_result": "Discount $3.75 is shown, but Sales tax is $3.09 (taxed on the undiscounted $37.50) and Total is $36.84.",
+      "steps": [
+        "Open /calculators/",
+        "Read Promo code Total (no code): $40.59",
+        "Type SAVE10 in 'Promo code' and click 'Apply code'",
+        "Read Discount, Sales tax and Total"
+      ],
+      "root_cause": "The tax is computed from the subtotal before the discount is taken off; the tax line never uses the discounted amount.",
+      "expected_classification": "application_bug",
+      "suggested_severity": "high",
+      "healthy_counterpart": "Checkout calculator (no discount applies there; subtotal, tax and total correct)"
+    },
+    {
+      "id": "CALC-004",
+      "category": "calculation",
+      "type": "free_shipping_boundary",
+      "route": "/calculators/",
+      "section": "Shipping",
+      "control": {
+        "role": "status",
+        "name": "Shipping",
+        "selector": "#ship-fee"
+      },
+      "inputs": {
+        "order_subtotal": "50.00"
+      },
+      "user_action": "Enter 50.00 in 'Order subtotal ($)'",
+      "expected_visible_result": "Shipping $0.00 (rule on page: orders of $50.00 or more ship free).",
+      "actual_result": "Shipping $5.00. An order of exactly $50.00 is charged shipping.",
+      "steps": [
+        "Open /calculators/",
+        "Enter 50.00 in 'Order subtotal ($)'",
+        "Read Shipping"
+      ],
+      "root_cause": "The free-shipping threshold is tested with '>' instead of '>=', so the boundary value is charged.",
+      "expected_classification": "application_bug",
+      "suggested_severity": "medium",
+      "healthy_counterpart": "HEALTHY-SHIPPING (49.99 is charged $5.00, 60.00 ships free)"
+    },
+    {
+      "id": "CALC-005",
+      "category": "calculation",
+      "type": "total_not_updated_on_quantity_change",
+      "route": "/calculators/",
+      "section": "Gift wrap",
+      "control": {
+        "role": "status",
+        "name": "Total (with $4.00 gift wrap)",
+        "selector": "#gift-total"
+      },
+      "inputs": {
+        "Gift box": {
+          "unit_price": "6.00",
+          "quantity": 5
+        },
+        "gift_wrap_fee": "4.00"
+      },
+      "user_action": "Change 'Gift box quantity' from 2 to 5",
+      "expected_visible_result": "Gift boxes $30.00 and Total $34.00 (rule on page: Total = gift boxes + $4.00 gift wrap fee).",
+      "actual_result": "Gift boxes $30.00, but Total stays at $16.00 (the price for 2 boxes).",
+      "steps": [
+        "Open /calculators/",
+        "Read Total: $16.00",
+        "Change 'Gift box quantity' from 2 to 5",
+        "Read Gift boxes and Total"
+      ],
+      "root_cause": "The total is built from the quantity the page loaded with, not from the quantity now entered.",
+      "expected_classification": "application_bug",
+      "suggested_severity": "high",
+      "healthy_counterpart": "Checkout calculator (subtotal follows each quantity change)"
+    },
+    {
+      "id": "CALC-006",
+      "category": "calculation",
+      "type": "remove_takes_unit_price",
+      "route": "/calculators/",
+      "section": "Cart review",
+      "control": {
+        "role": "status",
+        "name": "Cart total",
+        "selector": "#review-total"
+      },
+      "inputs": {
+        "Notebook": {"unit_price": "4.00", "quantity": 2},
+        "Pen": {"unit_price": "1.50", "quantity": 3},
+        "Mug": {"unit_price": "12.00", "quantity": 1}
+      },
+      "user_action": "Click 'Remove Pen from cart' (cart total starts at $24.50)",
+      "expected_visible_result": "Cart total $20.00 ($24.50 minus the Pen line total of $4.50; rule on page: removing an item takes its line total off).",
+      "actual_result": "Cart total $23.00: only the Pen unit price ($1.50) is taken off.",
+      "steps": [
+        "Open /calculators/",
+        "Read Cart total: $24.50",
+        "Click 'Remove Pen from cart'",
+        "Read Cart total"
+      ],
+      "root_cause": "The remove handler subtracts the item's unit price instead of its line total (quantity 3).",
+      "expected_classification": "application_bug",
+      "suggested_severity": "high",
+      "healthy_counterpart": "HEALTHY-REVIEW (removing Mug, quantity 1, is correct)"
+    },
+    {
+      "id": "CALC-007",
+      "category": "calculation",
+      "type": "amount_due_ignores_payment",
+      "route": "/calculators/",
+      "section": "Invoice INV-204",
+      "control": {
+        "role": "status",
+        "name": "Amount due",
+        "selector": "#invoice-due"
+      },
+      "inputs": {
+        "subtotal": "420.00",
+        "tax_rate_percent": "10",
+        "payment_received": "100.00"
+      },
+      "user_action": "Type 100.00 in 'Payment received ($)' (the box starts at 100.00)",
+      "expected_visible_result": "Amount due $362.00: the $462.00 total minus the $100.00 paid.",
+      "actual_result": "Amount due $462.00: the $100.00 paid is not taken off.",
+      "steps": [
+        "Open /calculators/",
+        "Type 100.00 in 'Payment received ($)'",
+        "Read Total and Amount due"
+      ],
+      "root_cause": "Amount due is set equal to the total. The payment box is never used in the sum.",
+      "expected_classification": "application_bug",
+      "suggested_severity": "high",
+      "healthy_counterpart": "HEALTHY-INVOICE (with no payment, amount due equals the total)"
+    },
+    {
+      "id": "CALC-008",
+      "category": "calculation",
+      "type": "half_cent_rounds_down",
+      "route": "/calculators/",
+      "section": "Small order tax",
+      "control": {
+        "role": "status",
+        "name": "Sales tax",
+        "selector": "#small-tax"
+      },
+      "inputs": {
+        "small_order_amount": "0.10",
+        "small_order_rate_percent": "5"
+      },
+      "user_action": "Read Sales tax for Small order amount 0.10 and Small order rate 5",
+      "expected_visible_result": "0.10 x 5 / 100 = 0.005, which is half a cent and rounds up: $0.01 (rule on page: rounded half up).",
+      "actual_result": "$0.00: the half cent is dropped.",
+      "steps": [
+        "Open /calculators/",
+        "Read Sales tax"
+      ],
+      "root_cause": "Math.floor is used where the rule is round half up, so a tax of exactly half a cent is dropped.",
+      "expected_classification": "application_bug",
+      "suggested_severity": "medium",
+      "healthy_counterpart": "Checkout calculator (tax rounded to the nearest cent)"
+    },
+    {
       "id": "CART-001",
       "category": "click",
       "type": "count_increments_twice",
@@ -425,6 +600,34 @@
         "Checkout: #checkout-subtotal, #checkout-tax, #checkout-total"
       ],
       "expected_behavior": "Defaults $37.50 / $3.09 / $40.59; Notebook qty 1 -> $33.50 / $2.76 / $36.26."
+    },
+    {
+      "id": "HEALTHY-SHIPPING",
+      "category": "calculation",
+      "route": "/calculators/",
+      "controls": [
+        "'Order subtotal ($)' set to 49.99, then 60.00"
+      ],
+      "expected_behavior": "49.99 -> Shipping $5.00; 60.00 -> Shipping $0.00 (free)."
+    },
+    {
+      "id": "HEALTHY-REVIEW",
+      "category": "calculation",
+      "route": "/calculators/",
+      "controls": [
+        "'Remove Mug from cart' (quantity 1)"
+      ],
+      "expected_behavior": "Cart total $24.50 -> $12.50 after removing the Mug."
+    },
+    {
+      "id": "HEALTHY-INVOICE",
+      "category": "calculation",
+      "route": "/calculators/",
+      "controls": [
+        "Invoice INV-204 subtotal, sales tax and total",
+        "'Payment received ($)' set to 0.00"
+      ],
+      "expected_behavior": "Subtotal $420.00, sales tax $42.00, total $462.00; with no payment, amount due $462.00."
     },
     {
       "id": "HEALTHY-BASKET",

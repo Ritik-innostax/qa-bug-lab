@@ -259,6 +259,67 @@ def calc_002(lab: Lab) -> str:
             f"{money(price + expected_tax)})")
 
 
+def calc_003(lab: Lab) -> str:
+    lab.open("/calculators/")
+    check(lab.text("#promo-total") == "$40.59", f"total with no code {lab.text('#promo-total')}")
+    lab.page.get_by_label("Promo code").fill("SAVE10")
+    lab.page.get_by_role("button", name="Apply code").click()
+    discount, tax, total = (lab.text(f"#promo-{part}") for part in ("discount", "tax", "total"))
+    expected_tax = cents_round(Decimal("33.75") * Decimal("8.25") / 100)
+    expected_total = Decimal("33.75") + expected_tax
+    check(discount == "$3.75", f"discount shows {discount}")
+    check(tax == "$3.09", f"sales tax shows {tax}")
+    check(total == "$36.84", f"total shows {total}")
+    return (f"SAVE10 -> discount {discount}, tax {tax}, total {total} "
+            f"(expected tax {money(expected_tax)}, total {money(expected_total)})")
+
+
+def calc_004(lab: Lab) -> str:
+    lab.open("/calculators/")
+    lab.page.get_by_label("Order subtotal ($)").fill("50.00")
+    fee = lab.text("#ship-fee")
+    check(fee == "$5.00", f"subtotal 50.00 shows shipping {fee}")
+    return f"Order subtotal 50.00 -> shipping {fee} (expected $0.00: $50.00 or more ships free)"
+
+
+def calc_005(lab: Lab) -> str:
+    lab.open("/calculators/")
+    check(lab.text("#gift-total") == "$16.00", f"total at load {lab.text('#gift-total')}")
+    lab.page.get_by_label("Gift box quantity").fill("5")
+    line, total = lab.text("#gift-line"), lab.text("#gift-total")
+    check(line == "$30.00", f"gift boxes after quantity 5 shows {line}")
+    check(total == "$16.00", f"total after quantity 5 shows {total}")
+    return f"Gift box quantity 2 -> 5: gift boxes {line}, total {total} (expected $34.00)"
+
+
+def calc_006(lab: Lab) -> str:
+    lab.open("/calculators/")
+    check(lab.text("#review-total") == "$24.50", f"cart total at load {lab.text('#review-total')}")
+    lab.page.get_by_role("button", name="Remove Pen from cart").click()
+    total = lab.text("#review-total")
+    check(total == "$23.00", f"cart total after removing Pen shows {total}")
+    return f"Cart total $24.50; remove Pen (line $4.50) -> {total} (expected $20.00)"
+
+
+def calc_007(lab: Lab) -> str:
+    lab.open("/calculators/")
+    lab.page.get_by_label("Payment received ($)").fill("100.00")
+    total, due = lab.text("#invoice-total"), lab.text("#invoice-due")
+    check(total == "$462.00", f"invoice total shows {total}")
+    check(due == "$462.00", f"amount due after a $100.00 payment shows {due}")
+    return f"Total {total}; payment 100.00 -> amount due {due} (expected $362.00)"
+
+
+def calc_008(lab: Lab) -> str:
+    lab.open("/calculators/")
+    amount = Decimal(lab.page.get_by_label("Small order amount ($)").input_value())
+    rate = Decimal(lab.page.get_by_label("Small order rate (%)").input_value())
+    expected = cents_round(amount * rate / 100)
+    shown = lab.text("#small-tax")
+    check(shown == "$0.00" and shown != money(expected), f"small order tax shows {shown}")
+    return f"{amount} at {rate}% -> tax {shown} (expected {money(expected)}: half a cent rounds up)"
+
+
 # ------------------------------------------------------------------------ healthy checks
 
 
@@ -355,6 +416,34 @@ def healthy_calc(lab: Lab) -> str:
     return f"checkout subtotal/tax/total correct: {results[0]}; Notebook qty 1 -> {results[1]}"
 
 
+def healthy_shipping(lab: Lab) -> str:
+    lab.open("/calculators/")
+    lab.page.get_by_label("Order subtotal ($)").fill("49.99")
+    below = lab.text("#ship-fee")
+    check(below == "$5.00", f"subtotal 49.99 shows shipping {below}")
+    lab.page.get_by_label("Order subtotal ($)").fill("60.00")
+    above = lab.text("#ship-fee")
+    check(above == "$0.00", f"subtotal 60.00 shows shipping {above}")
+    return f"subtotal 49.99 -> {below}; 60.00 -> {above} (free)"
+
+
+def healthy_review(lab: Lab) -> str:
+    lab.open("/calculators/")
+    lab.page.get_by_role("button", name="Remove Mug from cart").click()
+    total = lab.text("#review-total")
+    check(total == "$12.50", f"cart total after removing Mug shows {total}")
+    return f"Cart total $24.50 -> {total} after removing the Mug"
+
+
+def healthy_invoice(lab: Lab) -> str:
+    lab.open("/calculators/")
+    lab.page.get_by_label("Payment received ($)").fill("0")
+    subtotal, tax, total, due = (lab.text(f"#invoice-{part}") for part in ("subtotal", "tax", "total", "due"))
+    check((subtotal, tax, total) == ("$420.00", "$42.00", "$462.00"), f"invoice shows {subtotal}/{tax}/{total}")
+    check(due == "$462.00", f"amount due with no payment shows {due}")
+    return f"subtotal/tax/total {subtotal}/{tax}/{total}; with no payment, amount due {due}"
+
+
 CHECKS: list[tuple[str, str, Callable[[Lab], str]]] = [
     ("bug", "NAV-001", nav_001), ("bug", "NAV-002", nav_002),
     ("bug", "FORM-001", form_001), ("bug", "FORM-002", form_002),
@@ -363,9 +452,13 @@ CHECKS: list[tuple[str, str, Callable[[Lab], str]]] = [
     ("bug", "CART-003", cart_003), ("bug", "CART-004", cart_004),
     ("bug", "TOGGLE-001", toggle_001), ("bug", "TOGGLE-002", toggle_002),
     ("bug", "CALC-001", calc_001), ("bug", "CALC-002", calc_002),
+    ("bug", "CALC-003", calc_003), ("bug", "CALC-004", calc_004),
+    ("bug", "CALC-005", calc_005), ("bug", "CALC-006", calc_006),
+    ("bug", "CALC-007", calc_007), ("bug", "CALC-008", calc_008),
     ("healthy", "HEALTHY-NAV", healthy_nav), ("healthy", "HEALTHY-FORM", healthy_form),
     ("healthy", "HEALTHY-BUTTON", healthy_button), ("healthy", "HEALTHY-BASKET", healthy_basket), ("healthy", "HEALTHY-TOGGLE", healthy_toggle),
-    ("healthy", "HEALTHY-CALC", healthy_calc),
+    ("healthy", "HEALTHY-CALC", healthy_calc), ("healthy", "HEALTHY-SHIPPING", healthy_shipping),
+    ("healthy", "HEALTHY-REVIEW", healthy_review), ("healthy", "HEALTHY-INVOICE", healthy_invoice),
 ]
 
 
